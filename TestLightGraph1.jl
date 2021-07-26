@@ -47,7 +47,8 @@ println(collect(edges(g)))
 prim_mst_yo(g, weights(g))
 println("=====================================")
 """
-
+c220=AC_cbl_mst(mva,km,get_220kV_cables())
+c66=AC_cbl_mst(mva,km,get_66kV_cables())
 
 function gplot_solution(vs,es)
     _g=SimpleWeightedGraph(length(vs))
