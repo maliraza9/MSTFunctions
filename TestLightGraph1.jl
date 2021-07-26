@@ -1,6 +1,7 @@
 clearconsole()
 using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, Compose, GraphRecipes, Distances
-
+using TikzGraphs, XLSX, DataFrames
+include("src/economics/main.jl")
 #source=[1,1,2,2,4,5,6];destination=[2,3,3,2,4,6,5];w8=[1.0,2.0,3.0,2,1,6,3]
 #g = SimpleWeightedGraph(source, destination, w8);
 pos = [0 0; 1 -1; 1 1; 2 1; 2 -1]
@@ -26,10 +27,10 @@ kruk = kruskal_mst_yo(g, weights(g); minimize=true)
 #println(old)
 #println("===========================")
 
-
-
 prim = prim_mst_yo(g, weights(g))
 
+gplot_solution(vertices(g),edges(g))
+gplot_solution(vertices(g),kruk)
 #println(prim)
 #println(kruk)
 #New = collect(edges(g))
@@ -46,3 +47,13 @@ println(collect(edges(g)))
 prim_mst_yo(g, weights(g))
 println("=====================================")
 """
+c220=AC_cbl_mst(mva,km,get_220kV_cables())
+c66=AC_cbl_mst(mva,km,get_66kV_cables())
+
+function gplot_solution(vs,es)
+    _g=SimpleWeightedGraph(length(vs))
+    for e in es; add_edge!(_g, e); end
+    p=gplot(_g, nodelabel=["1","2","3","4","5"])
+    display(es)
+    return p
+end
