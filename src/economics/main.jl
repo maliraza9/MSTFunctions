@@ -9,6 +9,13 @@ wind_module.save_wind4_module(wnd,"Norther")
 ########################### Base equipment functions  ##########################
 ################################################################################
 #Cost of HVAC cable of capacity mva and length km
+
+function AC_cbl_mst(mva,km,kv)
+    cbl=cable();cbl.mva=mva;cbl.wnd="Norther"
+    ac_cbl=optimal_ac_cable(cbl,kv,km,get_Cost_Data())
+    if (ac_cbl.num<1); ac_cbl.costs.cpx_p=1e12; end
+    return ac_cbl
+end
 function AC_cbl(mva,km)
     cbl=cable();cbl.mva=mva;cbl.wnd="Norther"
     ac_cbl=optimal_ac_cable(cbl,get_220kV_cables(),km,get_Cost_Data())
