@@ -48,12 +48,14 @@ prim_mst_yo(g, weights(g))
 println("=====================================")
 """
 c220=AC_cbl_mst(mva,km,get_220kV_cables())
-c66=AC_cbl_mst(mva,km,get_66kV_cables())
+#available sizes:
+#95 120 150 185 240 300 400 500 630 800 1000 - same as juan's paper
+c66=AC_cbl_mst(30,1,get_66kV_cables())
 
 function gplot_solution(vs,es)
     _g=SimpleWeightedGraph(length(vs))
     for e in es; add_edge!(_g, e); end
-    p=gplot(_g, nodelabel=["1","2","3","4","5"])
+    p=gplot(_g, nodelabel=[string(i) for i in vs])
     display(es)
     return p
 end
