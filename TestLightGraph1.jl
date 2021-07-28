@@ -1,6 +1,6 @@
 clearconsole()
-using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, Compose, GraphRecipes, Distances
-using TikzGraphs, XLSX, DataFrames
+using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot
+using XLSX, DataFrames, Plots
 include("./src/economics/main.jl")
 #source=[1,1,2,2,4,5,6];destination=[2,3,3,2,4,6,5];w8=[1.0,2.0,3.0,2,1,6,3]
 #g = SimpleWeightedGraph(source, destination, w8);
@@ -61,11 +61,14 @@ function gplot_solution(vs,es)
 end
 
 ############################### GPS to UTM conversion #########################
-using Geodesy
-df = DataFrame(XLSX.readtable("/Users/shardy/Documents/GitHub/MSTFunctions/data/ronne_bank_gps.xlsx", "south")...)
-zone_utm=31; north_south=true;#Denmark
-utm_desired = UTMfromLLA(zone_utm, north_south, wgs84)#sets UTM zone
-utm = utm_desired(LLA(df[1:1,1][1]/1000,df[1:1,2][1]/1000))#coverts to cartesian
+nrth = DataFrame(XLSX.readtable("/Users/shardy/Documents/GitHub/MSTFunctions/data/ronne_bank_gps.xlsx", "north")...)
+plotly()
+p=plot()
+plot!(p,nrth[!,:_x], nrth[!,:_y],color = :red,seriestype=:scatter,markersize=4, markershape = :cross,label="",xaxis = ("km", font(20, "Courier")),yaxis = ("km", font(20, "Courier")))
+gui()
 
-lla_desired = LLAfromUTM(zone_utm, north_south, wgs84)#sets UTM zone
-_lla = lla_desired(UTM(pccE,pccN))#coverts to long lat
+sth = DataFrame(XLSX.readtable("/Users/shardy/Documents/GitHub/MSTFunctions/data/ronne_bank_gps.xlsx", "south")...)
+plotly()
+p=plot()
+plot!(p,sth[!,:_x], sth[!,:_y],color = :red,seriestype=:scatter,markersize=4, markershape = :cross,label="",xaxis = ("km", font(20, "Courier")),yaxis = ("km", font(20, "Courier")))
+gui()
