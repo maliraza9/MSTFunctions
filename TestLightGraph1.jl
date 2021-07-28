@@ -59,3 +59,12 @@ function gplot_solution(vs,es)
     display(es)
     return p
 end
+
+############################### GPS to UTM conversion #########################
+using Geodesy
+zone_utm=32; north_south=true;#Denmark
+utm_desired = UTMfromLLA(zone_utm, north_south, wgs84)#sets UTM zone
+utm = utm_desired(LLA(pcc.node.gps.lat,pcc.node.gps.lng))#coverts to cartesian
+
+lla_desired = LLAfromUTM(zone_utm, north_south, wgs84)#sets UTM zone
+_lla = lla_desired(UTM(pccE,pccN))#coverts to long lat
