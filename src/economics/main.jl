@@ -12,7 +12,7 @@ wind_module.save_wind4_module(wnd,"Norther")
 
 function AC_cbl_mst(mva,km,kv)
     cbl=cable();cbl.mva=mva;cbl.wnd="Norther"
-    ac_cbl=optimal_ac_cable(cbl,kv,km,get_Cost_Data())
+    ac_cbl=optimal_ac_cable_mst(cbl,kv,km,get_Cost_Data())
     if (ac_cbl.num<1); ac_cbl.costs.cpx_p=1e12; end
     return ac_cbl
 end

@@ -263,6 +263,75 @@ function optimal_ac_cable(cbl0,cbl_data,km,ks)
     return cbl
 end
 
+function optimal_ac_cable_mst(cbl0,cbl_data,km,ks)
+    cbl=cable()
+    cbl.costs.ttl=Inf
+    cbl.elec.volt=cbl_data[1][1]
+    cbl.length=km
+    cbl.mva=cbl0.mva
+    ##########################
+    #=if (cbl0.elec.volt==66.0)
+        cbl.mva=cbl0.mva*1.333
+    else
+        cbl.mva=cbl0.mva
+    end=#
+    ##########################
+    cbl0.costs.ttl=Inf
+    for cd in cbl_data
+        num=1
+        ######################
+        #=if (cbl0.elec.volt==66.0)
+            num=6
+        else
+            num=1
+        end=#
+        ######################
+        exception_66kv=false
+        cap_at_km=get_newQ_Capacity(cbl0.elec.freq,km,cd[1],cd[4]*10^-9,cd[5])
+        #max number of cables in parallel = 12
+        max_in_parallel=12#if changing check economics main function mvac_cable(mva,km,wnd,cable_array,ks)
+        GMAX=2000
+        if (cap_at_km/cbl0.mva>1/max_in_parallel || (cbl.elec.volt==66.0 && cbl0.mva<=3000))
+            while ((cbl0.mva>num*cap_at_km) && num<max_in_parallel)
+                num=deepcopy(num+1)
+            end
+            if ((cbl.elec.volt==66.0 && cbl0.mva>num*cap_at_km))
+                num=1
+                exception_66kv=true
+                cbl0.mva=cbl0.mva/2
+                while ((cbl0.mva>num*cap_at_km) && num<max_in_parallel)
+                    num=deepcopy(num+1)
+                end
+            end
+            fillOut_cable_struct_ac(cbl0,cd,km,num)
+            #cbl0=cost_hvac_cable_o2o(cbl0,ks)
+            if (cbl0.elec.volt==66.0)
+                cbl0=cost_mvac_cable(cbl0,ks)
+                if (exception_66kv==true)
+                    cbl0.num=cbl0.num*2
+                    cbl0.mva=cbl0.mva*2
+                    cbl0.costs.perkm_cpx=cbl0.costs.perkm_cpx*2
+                    cbl0.costs.sg=cbl0.costs.sg*2
+                    cbl0.costs.cpx_p=cbl0.costs.cpx_p*2
+                    cbl0.costs.cpx_i=cbl0.costs.cpx_i*2
+                    cbl0.costs.rlc=cbl0.costs.rlc*2
+                    cbl0.costs.cm=cbl0.costs.cm*2
+                    cbl0.costs.eens=cbl0.costs.eens*2
+                    cbl0.costs.ttl=cbl0.costs.ttl*2
+                    cbl0.costs.grand_ttl=cbl0.costs.ttl
+                end
+            elseif (cbl0.elec.volt==220.0 || cbl0.elec.volt==400.0)
+                cbl0=cost_hvac_cable(cbl0,ks)
+            else
+            end
+        end
+        if (cbl0.costs.ttl<cbl.costs.ttl)
+            cbl=deepcopy(cbl0)
+        end
+    end
+    return cbl
+end
+
 #puts cables into dictionaries
 #**
 function make_dictionaries_cables(cable_table)
