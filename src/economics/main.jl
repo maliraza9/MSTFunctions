@@ -2,7 +2,7 @@ include("functions.jl")
 #This file contains the exported functions
 ################################################################################
 ##########################  Default wind profile ###############################
-df = DataFrame(XLSX.readtable("./src/economics/input_data/data.xlsx", "wind_data")...)
+df = DataFrame(XLSX.readtable("../shardy/Documents/GitHub/MSTFunctions/src/economics/input_data/data.xlsx", "wind_data")...)
 wnd=wndF_wndPrf([getproperty(df,Symbol("Norther"))])
 wind_module.save_wind4_module(wnd,"Norther")
 ################################################################################
