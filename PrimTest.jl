@@ -6,7 +6,7 @@ Return a vector of edges representing the minimum spanning tree of a connected, 
 distance matrix `distmx` using [Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm).
 Return a vector of edges.
 """
-function prim_mst_yo end
+function prim_mst end
 @traitfn function prim_mst_yo(g::AG::(!IsDirected),
     distmx::AbstractMatrix{T}=weights(g)) where {T <: Real, U, AG <: AbstractGraph{U}}
 
@@ -24,14 +24,11 @@ function prim_mst_yo end
         v = dequeue!(pq)
         finished[v] = true
 
-        for u in neighbors(g, v)
+        for u in LightGraphs.neighbors(g, v)
             finished[u] && continue
 
             if wt[u] > distmx[u, v]
-                if wt[u]>0
-                    wt[u]=5
 
-                end
                 wt[u] = distmx[u, v]
                 pq[u] = wt[u]
                 parents[u] = v
@@ -39,5 +36,5 @@ function prim_mst_yo end
         end
     end
 
-    return [Edge{U}(parents[v], v) for v in vertices(g) if parents[v] != 0]
+    return [Edge{U}(parents[v], v) for v in LightGraphs.vertices(g) if parents[v] != 0]
 end
