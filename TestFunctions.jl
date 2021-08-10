@@ -5,6 +5,7 @@ function prim_mst_yo end
 @traitfn function prim_mst_yo(g::AG::(!IsDirected),
     distmx::AbstractMatrix{T}=weights(g)) where {T <: Real, U, AG <: AbstractGraph{U}}
 
+
     nvg = nv(g)
     global distCount = 0
     global us = zeros(1)

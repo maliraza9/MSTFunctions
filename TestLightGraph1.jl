@@ -3,7 +3,7 @@ using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeighte
 using TikzGraphs, XLSX, DataFrames
 include("src/economics/main.jl")
 
-include("EnergyVille/MSTFunctions/TestFunctions.jl")
+include("TestFunctions.jl")
 #source=[1,1,2,2,4,5,6];destination=[2,3,3,2,4,6,5];w8=[1.0,2.0,3.0,2,1,6,3]
 #g = SimpleWeightedGraph(source, destination, w8);
 global pos = [0 0; 1 -1; 1 1; 2 1; 2 -1]
