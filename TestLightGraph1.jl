@@ -71,5 +71,8 @@ utm_desired = UTMfromLLA(zone_utm, north_south, wgs84)#sets UTM zone
 utm = utm_desired(LLA(pcc.node.gps.lat,pcc.node.gps.lng))#coverts to cartesian
 utm = utm_desired(LLA(df[!:long(m)]pcc.node.gps.lat,pcc.node.gps.lng))#coverts to cartesian
 
-lla_desired = LLAfromUTM(zone_utm, north_south, wgs84)#sets UTM zone
-_lla = lla_desired(UTM(pccE,pccN))#coverts to long lat
+sth = DataFrame(XLSX.readtable("/Users/shardy/Documents/GitHub/MSTFunctions/data/ronne_bank_gps.xlsx", "south")...)
+plotly()
+p=plot()
+plot!(p,sth[!,:_x], sth[!,:_y],color = :red,seriestype=:scatter,markersize=4, markershape = :cross,label="",xaxis = ("km", font(20, "Courier")),yaxis = ("km", font(20, "Courier")))
+gui()

@@ -5,7 +5,6 @@ function prim_mst_yo end
 @traitfn function prim_mst_yo(g::AG::(!IsDirected),
     distmx::AbstractMatrix{T}=weights(g)) where {T <: Real, U, AG <: AbstractGraph{U}}
 
-
     nvg = nv(g)
     global distCount = 0
     global us = zeros(1)
@@ -55,18 +54,7 @@ function prim_mst_yo end
 
             finished[u] && continue
             if wt[u] > distmx[u, v] && capNode[u] < 4
-                count = count+1
-                capNode[u] = capNode[u] + 1
 
-                ###########
-                #wt[u] = distmx[u, v]
-                #pq[u] = wt[u]
-                #parents[u] = v
-                us = hcat(us,u)
-                vs = hcat(vs,v)
-                connList = hcat(connList,[u,v]) # collumn major list. Iterate across columns for connection list u-v. e.g. n[:,i] = [u,v] pair
-                connList = convert(Array{Int},connList)
-                #######
                 for i in 2:size(connList,2)
 
                     forCount = forCount+1
@@ -119,6 +107,9 @@ function prim_mst_yo end
                         global distUVcand      = Euclidean()([candXrowU,candYcolU],[candXrowV,candYcolV])
 
                         denCount = denCount + 1
+
+
+                        #if posXrowU>xInter>posXrowV
 
                         if (distUVprev != prevU2Intersect + prevV2Intersect) && (distUVcand != candU2Intersect + candV2Intersect)
                             wt[u] = distmx[u, v]
