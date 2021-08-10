@@ -26,7 +26,7 @@ function prim_mst_yo end
         for u in LightGraphs.neighbors(g, v)
             finished[u] && continue
 
-            if wt[u] > distmx[u, v] && capNode[u] < 4 && u =! 1
+            if wt[u] > distmx[u, v] && capNode[u] < 4 && u != 1
 
                 capNode[u] = capNode[u] + 1
                 wt[u] = distmx[u, v]
