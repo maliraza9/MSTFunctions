@@ -1,3 +1,8 @@
+T = Float64
+e = edge_list[sortperm(Weights; rev=!minimize)][1]
+
+
+
 function kruskal_mst_yo end
 @traitfn function kruskal_mst_yo(g::AG::(!IsDirected),
     distmx::AbstractMatrix{T}=weights(g); minimize=true) where {T <: Real, U, AG <: AbstractGraph{U}}
@@ -7,14 +12,14 @@ function kruskal_mst_yo end
     global mst = Vector{edgetype(g)}()
     sizehint!(mst, nv(g) - 1)
 
-    weights = Vector{T}()
-    sizehint!(weights, ne(g))
+    Weights = Vector{T}()
+    sizehint!(Weights, ne(g))
     global edge_list = collect(edges(g))
     for e in edge_list
-        push!(weights, distmx[src(e), dst(e)])
+        push!(Weights, distmx[src(e), dst(e)])
     end
 
-    for e in edge_list[sortperm(weights; rev=!minimize)]
+    for e in edge_list[sortperm(Weights; rev=!minimize)]
         if !in_same_set(connected_vs, src(e), dst(e))
 
             global srce = src(e)
