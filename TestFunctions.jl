@@ -93,34 +93,33 @@ function prim_mst_yo end
 
                     #candList[i] = [candU, candV]
 
-                    if den!=0
-                        xInter= ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/den
-                        yInter= ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/den
+                if den!=0
+                    xInter= ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/den
+                    yInter= ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/den
 
-                        ######
-                        global prevU2Intersect = Euclidean()([posXrowU,posYcolU],[xInter, yInter])
-                        global prevV2Intersect = Euclidean()([posXrowV,posYcolV],[xInter, yInter])
-                        global distUVprev      = Euclidean()([posXrowU,posYcolU],[posXrowV,posYcolV])
+                    ######
+                    global prevU2Intersect = Euclidean()([posXrowU,posYcolU],[xInter, yInter])
+                    global prevV2Intersect = Euclidean()([posXrowV,posYcolV],[xInter, yInter])
+                    global distUVprev      = Euclidean()([posXrowU,posYcolU],[posXrowV,posYcolV])
 
-                        global candU2Intersect = Euclidean()([candXrowU,candYcolU],[xInter, yInter])
-                        global candV2Intersect = Euclidean()([candXrowV,candYcolV],[xInter, yInter])
-                        global distUVcand      = Euclidean()([candXrowU,candYcolU],[candXrowV,candYcolV])
+                    global candU2Intersect = Euclidean()([candXrowU,candYcolU],[xInter, yInter])
+                    global candV2Intersect = Euclidean()([candXrowV,candYcolV],[xInter, yInter])
+                    global distUVcand      = Euclidean()([candXrowU,candYcolU],[candXrowV,candYcolV])
 
-                        denCount = denCount + 1
+                    denCount = denCount + 1
 
 
-                        #if posXrowU>xInter>posXrowV
+                    #if posXrowU>xInter>posXrowV
 
-                        if (distUVprev != prevU2Intersect + prevV2Intersect) && (distUVcand != candU2Intersect + candV2Intersect)
-                            wt[u] = distmx[u, v]
-                            pq[u] = wt[u]
-                            parents[u] = v
-                            connList = hcat(connList,[u,v]) # collumn major list. Iterate across columns for connection list u-v. e.g. n[:,i] = [u,v] pair
-                            distCount = distCount + 1
-                            #global candU = u
-                            #global candV = v
+                    if (distUVprev != prevU2Intersect + prevV2Intersect) && (distUVcand != candU2Intersect + candV2Intersect)
+                        wt[u] = distmx[u, v]
+                        pq[u] = wt[u]
+                        parents[u] = v
+                        connList = hcat(connList,[u,v]) # collumn major list. Iterate across columns for connection list u-v. e.g. n[:,i] = [u,v] pair
+                        distCount = distCount + 1
+                        #global candU = u
+                        #global candV = v
 
-                        end
                     end
                 end
             end
