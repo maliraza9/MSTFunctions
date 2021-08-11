@@ -23,7 +23,7 @@ function prim_mst_yo end
     forCount = 0
     denCount = 0
 
-    connList = zeros(2,2)
+    connList = zeros(2)
 
     lineVU = zeros()
     xInter = []
@@ -53,17 +53,11 @@ function prim_mst_yo end
             candU = u
             candV = v
             cdd = cdd + 1
-            #den = 1
-
             finished[u] && continue
             if wt[u] > distmx[u, v] && capNode[u] < 4
 
                 for i in 2:size(connList,2)
-
                     forCount = forCount+1
-
-
-                        #if posXrowU>xInter>posXrowV
 
                         if cableCrossingConstraint(connList,2, pos)
                             wt[u] = distmx[u, v]
@@ -71,15 +65,13 @@ function prim_mst_yo end
                             parents[u] = v
                             connList = hcat(connList,[u,v]) # collumn major list. Iterate across columns for connection list u-v. e.g. n[:,i] = [u,v] pair
                             distCount = distCount + 1
-                            #global candU = u
-                            #global candV = v
 
                         end
                     end
                 end
             end
         end
-    end
+    #end
 
     return [Edge{U}(parents[v], v) for v in LightGraphs.vertices(g) if parents[v] != 0]
 
