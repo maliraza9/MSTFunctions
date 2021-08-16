@@ -1,13 +1,10 @@
-clearconsole()
-using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, Compose, GraphRecipes, Distances#, LazySets
-using TikzGraphs, XLSX, DataFrames
-include("src/economics/main.jl")
-
-include("TestFunctions.jl")
 #source=[1,1,2,2,4,5,6];destination=[2,3,3,2,4,6,5];w8=[1.0,2.0,3.0,2,1,6,3]
+using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, Compose, GraphRecipes, Distances#, LazySets
 #g = SimpleWeightedGraph(source, destination, w8);
-pos = [0 0; 1 -1; 1 1; 2 1; 2 -1]
+using TikzGraphs, XLSX, DataFrames
 #global pos = [0 2; 3 -1; 5 1; 2 9; 2 -1]
+clearconsole()
+pos = [0 0; 1 -1; 1 1; 2 1; 2 -1]
 distmx=pairwise(Euclidean(), pos, dims = 1)
 g = SimpleWeightedGraph(5)  # or use `SimpleWeightedDiGraph` for directed graphs
 add_edge!(g, 1, 2, 1.41421)
@@ -20,17 +17,26 @@ add_edge!(g, 2, 5, 1)
 add_edge!(g, 3, 4, 1)
 add_edge!(g, 3, 5, 2.23607)
 add_edge!(g, 4, 5, 2.0)
+prim = prim_algorithm(g, weights(g))
 
 #prim_mst_yo(g, distmx)
 #println(SimpleWeightedGraph(g))
 #println(collect(edges(g)))
-kruk = kruskal_mst_yo(g, weights(g); minimize=true)
 #kruk = minimum_spanning_tree(distmx,5)
 #old = collect(edges(kruk))
 #println(old)
 #println("===========================")
 
-prim = prim_Self(g, weights(g))
+#workspace()
+clearconsole()
+
+
+
+
+kruk = kruskal_mst_yo(g, weights(g); minimize=true)
+include("src/economics/main.jl")
+
+include("TestFunctions.jl")
 
 gplot_solution(vertices(g),edges(g))
 gplot_solution(vertices(g),kruk)
