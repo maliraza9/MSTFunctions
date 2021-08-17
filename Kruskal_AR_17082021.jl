@@ -35,6 +35,7 @@ function kruskal_algorithm end
         end
     end
 
+
     itr = 0
 
     allEdgesUnsorted = allEdgesUnsorted[sortperm(allEdgesUnsorted[:, 3]), :]
