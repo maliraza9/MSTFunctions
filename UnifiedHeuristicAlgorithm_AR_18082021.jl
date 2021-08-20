@@ -52,7 +52,7 @@ function unified_algorithm end
 
     Tij = initTradeoff(p_set, dmx, N)   # 1
 
-    for i in 1:4
+    while(size(E_T[:,1])[1]<N-1)
 
         minT_argument = argmin(Tij[:,3])
         minT = Tij[minT_argument,:]
@@ -72,30 +72,16 @@ function unified_algorithm end
         kk = convert(Int64,E_T[end][2])
         dmx[k, kk] = 2000000000
         dmx[kk, k] = 2000000000
-        #dmx[V_T[end-1],V_T[end]] = 2000000000
-        #dmx[V_T[end],V_T[end-1]] = 2000000000
         Tij, dmx = updateTradeoff(p_set, dmx, N) ### remove dmx as output argument
 
 
 
         C =  updateC(C, E_T)
 
-        #q = findall(z->z==1,Tij[:,1])
-        #w = findall(z->z==2,Tij[:,2])
-
-        """
-        for i in q
-            for j in w
-                if i == E_T[end][1] && j == E_T[end][2]
-                    Tij[i,3] = 2000000000
-                elseif i == E_T[end][2] && j == E_T[end][1]
-                    Tij[j,3] = 2000000000
-                end
-            end
-        end
-        """
     end
     display(E_T)
+    display(V_T)
+    display(C)
 end
 
 
@@ -228,7 +214,7 @@ function P_update_EW(selected_Node_updateP, p_set_updateP, C, E_T)
 
 
 
-    for v in C[node_j]    #convert(Int64,E_T[1:end][1]) #C[E_T[1:end][1]]
+    for v in C[node_i]
         v = convert(Int,v)
         p_set_updateP[v] = p_set_updateP[selected_Node_updateP]
     end
