@@ -17,8 +17,12 @@ add_edge!(g, 2, 5, 1)
 add_edge!(g, 3, 4, 1)
 add_edge!(g, 3, 5, 2.23607)
 add_edge!(g, 4, 5, 2.0)
+
+unified = unified_algorithm(g, weights(g))
+
+
+
 prim = prim_algorithm(g, weights(g))
-clearconsole()
 krusk = kruskal_algorithm(g, weights(g))
 #prim_mst_yo(g, distmx)
 #println(SimpleWeightedGraph(g))

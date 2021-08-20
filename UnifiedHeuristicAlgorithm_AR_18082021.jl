@@ -16,6 +16,7 @@ function unified_algorithm end
     V_T = [v_oss] # set node oss
     E_T =[]
     W_T = []
+    
 
     #initialize P in heuristic function
     heur = 1 #from argument of main function
