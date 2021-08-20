@@ -1,5 +1,4 @@
 using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, LazySets, GeometryTypes
-i=3
 
 function unified_algorithm end
 @traitfn function unified_algorithm(g::AG::(!IsDirected),
@@ -19,7 +18,7 @@ function unified_algorithm end
     W_T = []
 
     #initialize P in heuristic function
-    heur = 3 #from argument of main function
+    heur = 1 #from argument of main function
 
     p_set_zeros = zeros(N)
     oss_Node = [v_oss]
@@ -59,23 +58,30 @@ function unified_algorithm end
 
         minT[1] = convert(Int64, minT[1])
         minT[2] = convert(Int64, minT[2])
+        candidateU = convert(Int64, minT[1])
+        candidateV = convert(Int64, minT[2])
+        """
+        in functions where E_T is used, the purpose is to extract and use candidateU and candidateV.
+        in lines immediately above this has been performed, therefore replace all function arguments "E_T" with "candidateU, candidateV"
+        and inside those functions simply use candidateU, candidateV instead of using "o, oo" below, which represent the Int64 type
+        of E_T values in the last row columns 1 and 2 respectively. Therefore, also remove those two code lines:
 
-        E_T = push!(E_T,[minT[1], minT[2]])
-        W_T = push!(W_T,[minT[3]])
-        V_T = push!(V_T, minT[2])
+        o = convert(Int64,E_T[end][1]) #convereting to Int64 for indexing in C[i] columns
+        oo = convert(Int64,E_T[end][2])
+        """
+
+        E_T = push!(E_T,[candidateU, candidateV])
+        W_T = push!(W_T,[minT[3]]) # this is not used in program since values are manipulated directlt in triple Tij[:,3] corresponding weights tij for node i,j
+        V_T = push!(V_T, candidateV)
 
 
 
         p_set = updateP(heur, V_T[end], p_set, C, V_T, E_T)
 
-        k = convert(Int64,E_T[end][1]) #convereting to Int64 for indexing in C[i] columns
-        kk = convert(Int64,E_T[end][2])
-        dmx[k, kk] = 2000000000
-        dmx[kk, k] = 2000000000
+
+        dmx = setUVinfinite(dmx, candidateU, candidateV)
+
         Tij, dmx = updateTradeoff(p_set, dmx, N) ### remove dmx as output argument
-
-
-
         C =  updateC(C, E_T)
 
     end
@@ -211,9 +217,6 @@ function P_update_EW(selected_Node_updateP, p_set_updateP, C, E_T)
     node_i = convert(Int64, node_i)
     node_j = E_T[end,1][2]
     node_j = convert(Int64, node_j)
-
-
-
     for v in C[node_i]
         v = convert(Int,v)
         p_set_updateP[v] = p_set_updateP[selected_Node_updateP]
@@ -227,4 +230,11 @@ function updateC(C, E_T)
     push!(C[o],E_T[end][2])
     push!(C[oo],E_T[end][1])
     return C
+end
+
+function setUVinfinite(dmx_setUVinfinite, candidateU, candidateV)
+
+    dmx_setUVinfinite[candidateU, candidateV] = 2000000000
+    dmx_setUVinfinite[candidateV, candidateU] = 2000000000
+    return dmx_setUVinfinite
 end
