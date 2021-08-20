@@ -19,7 +19,7 @@ function unified_algorithm end
     W_T = []
 
     #initialize P in heuristic function
-    heur = 1 #from argument of main function
+    heur = 3 #from argument of main function
 
     p_set_zeros = zeros(N)
     oss_Node = [v_oss]
@@ -28,15 +28,17 @@ function unified_algorithm end
     p_set = p_set_initialized
 
 
-
-    C = zeros(Int,N)
-
-    for i in 1:size(C)[1]
-        #convert(Int,i)
-        C[i] = i
+    C = []
+    for i = 1:N
+        push!(C,[])
     end
 
-    C
+    for i = 1:N
+        C[i] = [i]
+    end
+
+
+
 
     itr = 1
     Triple_ij = zeros(N*N,3)
@@ -48,148 +50,67 @@ function unified_algorithm end
         end
     end
 
-    Triple_ij
-
-
-
-
-    Tij_original = Triple_ij
-
     Tij = initTradeoff(p_set, dmx, N)   # 1
 
-###################################################################
-    for i in 1:10
-
-        i
-        #display(i+1)
+    for i in 1:4
 
         minT_argument = argmin(Tij[:,3])
-        Tij[10,:]
-
-        Tij
-
         minT = Tij[minT_argument,:]
+
+        minT[1] = convert(Int64, minT[1])
+        minT[2] = convert(Int64, minT[2])
 
         E_T = push!(E_T,[minT[1], minT[2]])
         W_T = push!(W_T,[minT[3]])
         V_T = push!(V_T, minT[2])
-        #display(V_T')
 
-        p_set = updateP(heur, V_T[end], p_set, C, V_T)
-        Tij = updateTradeoff(p_set, dmx, N)
-        if heur == 3
-            C =  updateC(C, V_T)
+
+
+        p_set = updateP(heur, V_T[end], p_set, C, V_T, E_T)
+
+        k = convert(Int64,E_T[end][1]) #convereting to Int64 for indexing in C[i] columns
+        kk = convert(Int64,E_T[end][2])
+        dmx[k, kk] = 2000000000
+        dmx[kk, k] = 2000000000
+        #dmx[V_T[end-1],V_T[end]] = 2000000000
+        #dmx[V_T[end],V_T[end-1]] = 2000000000
+        Tij, dmx = updateTradeoff(p_set, dmx, N) ### remove dmx as output argument
+
+
+
+        C =  updateC(C, E_T)
+
+        #q = findall(z->z==1,Tij[:,1])
+        #w = findall(z->z==2,Tij[:,2])
+
+        """
+        for i in q
+            for j in w
+                if i == E_T[end][1] && j == E_T[end][2]
+                    Tij[i,3] = 2000000000
+                elseif i == E_T[end][2] && j == E_T[end][1]
+                    Tij[j,3] = 2000000000
+                end
+            end
         end
-
-        #display("------------")
-        #display(dmx[V_T[end-1], V_T[end]])
-        dmx[V_T[end-1], V_T[end]]
-        dmx[V_T[end], V_T[end-1]]
-        dmx[V_T[end-1], V_T[end]] = 2000000000
-        dmx[V_T[end], V_T[end-1]] = 2000000000
-        #display("------------")
-
-        dmx
+        """
     end
     display(E_T)
-
-
-    #display(E_T)
-    #display(W_T)
-    #display(V_T)
-    #display(Tij)
-    ###########################################
-
-    """
-    minT_argument = argmin(Tij_2[:,3])
-    minT = Tij_2[minT_argument,:]
-
-    #display("2")
-    #display(minT)
-
-
-    #display(p_set)
-    #display(Tij_2)
-    #nodeJ = 3
-    E_T = push!(E_T,[minT[1], minT[2]])
-    W_T = push!(W_T,[minT[3]])
-    V_T = push!(V_T, minT[2])
-    display("2")
-    display(E_T)
-    display(W_T)
-    display(V_T)
-    p_set = updateP(heur, V_T[end], p_set, C, V_T)
-    Tij_3 = updateTradeoff(p_set, dmx, N)
-    if heur == 3
-        C =  updateC(C, V_T)
-    end
-
-    minT_argument = argmin(Tij_3[:,3])
-    minT = Tij_3[minT_argument,:]
-    display("------------")
-    display(dmx[V_T[end-1], V_T[end]])
-    dmx[V_T[end-1], V_T[end]] = 2000000000
-    dmx[V_T[end], V_T[end-1]] = 2000000000
-    display("------------")
-
-
-    E_T = push!(E_T,[minT[1], minT[2]])
-    W_T = push!(W_T,[minT[3]])
-    V_T = push!(V_T, minT[2])
-    display("3")
-    display(E_T)
-    display(W_T)
-    display(V_T)
-
-
-    nodeJ = 3
-    E_T = push!(E_T,[minT[1], minT[2]])
-    W_T = push!(W_T,[minT[3]])
-    V_T = push!(V_T, minT[2])
-
-
-    display("4")
-    display(E_T)
-    display(W_T)
-    display(V_T)
-    p_set = updateP(heur, V_T[end], p_set, C, V_T)
-    Tij_4 = updateTradeoff(p_set, dmx, N)
-    if heur == 3
-        C =  updateC(C, V_T)
-    end
-
-    minT_argument = argmin(Tij_4[:,3])
-    minT = Tij_4[minT_argument,:]
-    display("------------")
-    display(dmx[V_T[end-1], V_T[end]])
-    dmx[V_T[end-1], V_T[end]] = 2000000000
-    dmx[V_T[end], V_T[end-1]] = 2000000000
-    display("------------")
-
-
-    E_T = push!(E_T,[minT[1], minT[2]])
-    W_T = push!(W_T,[minT[3]])
-    V_T = push!(V_T, minT[2])
-    display("4")
-    display(E_T)
-    display(W_T)
-    display(V_T)
-
-    #display("3")
-    #display(minT)
-
-
-
-    #display(p_set)
-    #display(Tij_3)
-    """
-
-
-
 end
 
-function initTradeoff(p_set_initTradeOff, dmx_initTradeoff, N)
 
+
+    ###########################################
+    #Functions
+    ###########################################
+
+
+
+
+
+
+
+function initTradeoff(p_set_initTradeOff, dmx_initTradeoff, N)
 
     itr = 1
     Triple_ij_initTradeoff = zeros(N*N,3)
@@ -209,35 +130,30 @@ function initTradeoff(p_set_initTradeOff, dmx_initTradeoff, N)
     return Triple_ij_initTradeoff
 end
 
-dmx_updateTradeoff = dmx
-i = 1
-j = 1
 function updateTradeoff(p_set_updateTradeoff, dmx_updateTradeoff, N)
     itr = 1
     Triple_ij_updateTradeoff = zeros(N*N,3)
-    #display(dmx_updateTradeoff)
 
 ############################
     itr = 1
-    dmx
+    #dmx
     for i in 1:size(dmx_updateTradeoff[1:end,1])[1]
         for j in 1:size(dmx_updateTradeoff[1:end,1])[1]
             Triple_ij_updateTradeoff[itr,:] = [i, j, dmx_updateTradeoff[i,j]]
             itr = itr+1
-            if i == 2.0 && j == 5.0
-                display(dmx_updateTradeoff[i,j])
-            end
+            #if i == 2.0 && j == 5.0
+            #end
 
         end
     end
-    #display(Triple_ij_updateTradeoff)
     itr = 1
 
     for i in 1:size(Triple_ij_updateTradeoff[1:end,1])[1]
         Triple_ij_updateTradeoff[itr,3] = Triple_ij_updateTradeoff[itr, 3] - p_set_updateTradeoff[convert(Int,Triple_ij_updateTradeoff[itr,1])]
         itr = itr+1
     end
-    return Triple_ij_updateTradeoff
+
+    return Triple_ij_updateTradeoff, dmx_updateTradeoff
 end
 
 ##################################
@@ -283,13 +199,13 @@ end
     return p_set_initialize_EW
 end
 
-function updateP(heur_updateP, selected_Node_updateP, p_set_updateP, C, V_T)
+function updateP(heur_updateP, selected_Node_updateP, p_set_updateP, C, V_T, E_T)
     if heur_updateP == 1
         p_set_upd = P_update_Prim(selected_Node_updateP, p_set_updateP)
     elseif heur_updateP == 2
         p_set_upd = P_update_Kruskal(selected_Node_updateP, p_set_updateP)
     elseif heur_updateP == 3
-        p_set_upd = P_update_EW(selected_Node_updateP, p_set_updateP, C, V_T)
+        p_set_upd = P_update_EW(selected_Node_updateP, p_set_updateP, C, E_T)
     end
     return p_set_upd
 end
@@ -303,18 +219,26 @@ function P_update_Kruskal(selected_Node_update_Kruskal, p_set_update_Kruskal)
     return p_set_update_Kruskal
 end
 
-function P_update_EW(selected_Node_updateP, p_set_updateP, C, V_T)
-    for v in C[V_T[end-1]]
+function P_update_EW(selected_Node_updateP, p_set_updateP, C, E_T)
+
+    node_i = E_T[end,1][1]
+    node_i = convert(Int64, node_i)
+    node_j = E_T[end,1][2]
+    node_j = convert(Int64, node_j)
+
+
+
+    for v in C[node_j]    #convert(Int64,E_T[1:end][1]) #C[E_T[1:end][1]]
         v = convert(Int,v)
         p_set_updateP[v] = p_set_updateP[selected_Node_updateP]
     end
     return p_set_updateP
 end
 
-function updateC(C, V_T)
-    push!([C[2]],1)
-    push!([C[1]],2)
-    #push!([C[V_T[end-1]]],V_T[end])
-    #push!([C[V_T[end]]],V_T[end-1])
+function updateC(C, E_T)
+    o = convert(Int64,E_T[end][1]) #convereting to Int64 for indexing in C[i] columns
+    oo = convert(Int64,E_T[end][2])
+    push!(C[o],E_T[end][2])
+    push!(C[oo],E_T[end][1])
     return C
 end
