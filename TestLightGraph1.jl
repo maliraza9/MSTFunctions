@@ -43,8 +43,8 @@ include("src/economics/main.jl")
 
 include("TestFunctions.jl")
 
-gplot_solution(vertices(g),edges(g))
-gplot_solution(vertices(g),kruk)
+gplot_solution(LightGraphs.vertices(g),edges(g))
+gplot_solution(vertices(g),unified)
 #println(prim)
 #println(kruk)
 #New = collect(edges(g))

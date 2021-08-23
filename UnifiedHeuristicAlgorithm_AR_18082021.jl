@@ -16,7 +16,7 @@ function unified_algorithm end
     V_T = [v_oss] # set node oss
     E_T =[]
     W_T = []
-    
+
 
     #initialize P in heuristic function
     heur = 1 #from argument of main function
@@ -52,6 +52,8 @@ function unified_algorithm end
 
     Tij = initTradeoff(p_set, dmx, N)   # 1
 
+
+
     while(size(E_T[:,1])[1]<N-1)
 
         minT_argument = argmin(Tij[:,3])
@@ -61,15 +63,6 @@ function unified_algorithm end
         minT[2] = convert(Int64, minT[2])
         candidateU = convert(Int64, minT[1])
         candidateV = convert(Int64, minT[2])
-        """
-        in functions where E_T is used, the purpose is to extract and use candidateU and candidateV.
-        in lines immediately above this has been performed, therefore replace all function arguments "E_T" with "candidateU, candidateV"
-        and inside those functions simply use candidateU, candidateV instead of using "o, oo" below, which represent the Int64 type
-        of E_T values in the last row columns 1 and 2 respectively. Therefore, also remove those two code lines:
-
-        o = convert(Int64,E_T[end][1]) #convereting to Int64 for indexing in C[i] columns
-        oo = convert(Int64,E_T[end][2])
-        """
 
         E_T = push!(E_T,[candidateU, candidateV])
         W_T = push!(W_T,[minT[3]]) # this is not used in program since values are manipulated directlt in triple Tij[:,3] corresponding weights tij for node i,j
@@ -87,8 +80,6 @@ function unified_algorithm end
 
     end
     display(E_T)
-    display(V_T)
-    display(C)
 end
 
 
