@@ -1,8 +1,5 @@
-#source=[1,1,2,2,4,5,6];destination=[2,3,3,2,4,6,5];w8=[1.0,2.0,3.0,2,1,6,3]
 using PowerModels, LightGraphs, InfrastructureModels, Ipopt, JuMP, SimpleWeightedGraphs, SimpleTraits, DataStructures, SimpleGraphs, GraphPlot, TikzPictures, Compose, GraphRecipes, Distances#, LazySets
-#g = SimpleWeightedGraph(source, destination, w8);
 using TikzGraphs, XLSX, DataFrames
-#global pos = [0 2; 3 -1; 5 1; 2 9; 2 -1]
 clearconsole()
 pos = [0 0; 1 -1; 1 1; 2 1; 2 -1]
 distmx=pairwise(Euclidean(), pos, dims = 1)
@@ -19,48 +16,20 @@ add_edge!(g, 3, 5, 2.23607)
 add_edge!(g, 4, 5, 2.0)
 
 unified = unified_algorithm(g, weights(g))
-
-
-
 prim = prim_algorithm(g, weights(g))
 krusk = kruskal_algorithm(g, weights(g))
-#prim_mst_yo(g, distmx)
-#println(SimpleWeightedGraph(g))
-#println(collect(edges(g)))
-#kruk = minimum_spanning_tree(distmx,5)
-#old = collect(edges(kruk))
-#println(old)
-#println("===========================")
-
-#workspace()
 clearconsole()
-
-
 
 
 kruk = kruskal_mst_yo(g, weights(g); minimize=true)
 include("src/economics/main.jl")
 
-include("TestFunctions.jl")
+include("ConstraintFunctions.jl")
 
 gplot_solution(LightGraphs.vertices(g),edges(g))
 gplot_solution(vertices(g),unified)
-#println(prim)
-#println(kruk)
-#New = collect(edges(g))
 
-#gplot(kruk)
-"""
-#println(SimpleGraph(g.weights))
-dist = weights(g);
-println("#############################")
 
-kruskal_mst_yo(g, dist; minimize=true)
-println(collect(edges(g)))
-
-prim_mst_yo(g, weights(g))
-println("=====================================")
-"""
 c220=AC_cbl_mst(mva,km,get_220kV_cables())
 #available sizes:
 #95 120 150 185 240 300 400 500 630 800 1000 - same as juan's paper
